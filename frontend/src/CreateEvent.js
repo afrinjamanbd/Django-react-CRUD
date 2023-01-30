@@ -67,7 +67,7 @@ const CreateEvent = () => {
             <input className="m-4" onChange={(e)=> handle(e)} id = "name" value = {data.name} placeholder="name"  type='text'></input>
             <label  className="m-1" htmlFor="loc">Location </label>
             <select id="loc" name="loc"  onChange={(e)=> handle(e)}>
-            <option selected disabled = "true">-- Select Location --</option>
+            <option defaultValue disabled={true}>-- Select Location --</option>
             {
               Country.Country.map((result)=>
               (<option title = {"Country id : "+result.id} value= {result.name}>{result.name}</option>))

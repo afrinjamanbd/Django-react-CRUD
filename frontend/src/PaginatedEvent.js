@@ -37,7 +37,7 @@ function PaginatedEvent() {
       const res = await fetch(
         `http://localhost:8000/api/events?page[number]=1&page[size]=${limit}`
       );
-      const data = await res.json();     
+      const data = await res.json();    
       setpageCount(Math.ceil(total/ limit));
       setItems(data);
     };
