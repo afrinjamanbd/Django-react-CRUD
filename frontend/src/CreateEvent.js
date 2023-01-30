@@ -17,6 +17,12 @@ const CreateEvent = () => {
     date: ""
   })
 
+  let blankData = {
+    name: "",
+    loc: "",
+    date: ""
+  }
+
   // stores onchange data from input
   function handle(e){
     const newdata = {...data};
@@ -33,16 +39,17 @@ const CreateEvent = () => {
           Name: data.name,
           Location:data.loc,
           Date: data.date,       
-      }).then(res => alert("Event added!"))
-        .catch(error => console.log(error.response))
+      }).then(alert("Event added!"))
+        .then(setData(blankData))
+        .catch(error => alert("Error occured while adding new event!\n" + error.response ))
       
       case 'Edit':
         Axios.put(`http://127.0.0.1:8000/api/events/${location.state.item.id}/`,{
           Name: data.name,
           Location:data.loc,
           Date: data.date,       
-      }).then(res => alert("Event Updated!"))
-        .catch(error => console.log(error.response))
+      }).then(alert("Event Updated!"))
+        .catch(error => alert("Error occured while udpdating selected event!\n" + error.response ))
     }
   }
 
@@ -54,20 +61,17 @@ const CreateEvent = () => {
   return (
     <div className="container m-4 card p-4">
       <h5> Events</h5>
-      <p> <span>{location.state.text.text1}</span> <span style={{ color: 'blue' }} onClick={goBack}> Back</span></p>
+      <p> <span>{location.state.text.text1}</span> <span style={{ color: 'blue',cursor:"pointer" }} onClick={goBack}> Back</span></p>
       <div className="m-4">
         <form onSubmit={(e)=> create(e, location.state.text.text2)}>
             <input className="m-4" onChange={(e)=> handle(e)} id = "name" value = {data.name} placeholder="name"  type='text'></input>
             <label  className="m-1" htmlFor="loc">Location </label>
             <select id="loc" name="loc"  onChange={(e)=> handle(e)}>
             <option selected disabled = "true">-- Select Location --</option>
-            {/* {
-              Country.Country.map(result)=>(<option title="">result.name</option>)
-            } */}
-            <option value="Bangladesh">Bangladesh</option>
-            <option value="India">India</option>
-            <option value="Pakistan">Pakistan</option>
-            <option value="Bhutan">Bhutan</option>
+            {
+              Country.Country.map((result)=>
+              (<option title = {"Country id : "+result.id} value= {result.name}>{result.name}</option>))
+            }
             </select>           
             <input className="m-4" onChange={(e)=> handle(e)} id = "date" value = {data.date} placeholder="date" type="datetime-local"></input>
             <button className="btn btn-primary">{location.state.text.text2}</button>

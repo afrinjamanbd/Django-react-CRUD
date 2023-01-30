@@ -75,9 +75,8 @@ function PaginatedEvent() {
   // deletes selected event with delete request method
   function deleteEvent(item){
     Axios.delete(`http://127.0.0.1:8000/api/events/${item.id}/`)
-  .then(res => alert("Event deleted!"))
-  .catch(error => console.log(error.response))
-
+    .then(alert("Event deleted!"))
+    .catch(error => alert("Error occured while deleting selected event!\n" + error.response ))
   }
 
   // page number onclick funtion
@@ -91,7 +90,7 @@ function PaginatedEvent() {
     <div className="container m-4 card">
       <h5> Events</h5>
       <p> List of events! - 
-        <span style={{ color: 'blue' }} onClick={goToCreateEvent}> Create</span>
+        <span style={{ color: 'blue', cursor:"pointer"}} onClick={goToCreateEvent}> Create</span>
       </p>
       <div style={{display:"inline-block"}}>
         <h6 style={{display:"inline-block"}} >Show</h6>             
@@ -99,7 +98,7 @@ function PaginatedEvent() {
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="15">15</option>
-            </select> <h6 style={{display:"inline-block"}}>entries</h6>
+        </select> <h6 style={{display:"inline-block"}}>entries</h6>
       </div>
       <div>
         <div className="row m-2 card">
@@ -114,13 +113,13 @@ function PaginatedEvent() {
           </thead>
           <tbody>
             {items.map((item) => {
-              // var utcDate = new Date(item.Date).toUTCString();
+              var utcDate = new Date(item.Date).toUTCString().replaceAll("GMT", "");
               return (
                 <tr key={item.id}>
                   <td>{item.Name} </td>
                   <td>{item.Location}</td>
-                  <td>{item.Date}</td>
-                  <td style={{ color: 'blue' }}>
+                  <td>{utcDate + " UTC "}</td>
+                  <td style={{ color: 'blue',cursor:"pointer" }}>
                     <span onClick={() => goToEditEvent(item)}> Edit </span>
                     <span onClick={() => deleteEvent(item)}> Delete </span>
                   </td>
@@ -131,7 +130,7 @@ function PaginatedEvent() {
         </table>
         </div>
       </div>
-      <div style={{display:"inline-block"}}>Showing {'currentPage'} to {limit} of {total} results</div>
+      <div style={{display:"inline-block"}}>Showing {1} to {limit} of {total} results</div>
       <ReactPaginate
         previousLabel={"previous"}
         nextLabel={"next"}
