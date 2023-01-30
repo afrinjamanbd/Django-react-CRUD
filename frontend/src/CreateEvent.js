@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Country from './country.json'
 import { useNavigate,useLocation } from "react-router-dom";
 import Axios from 'axios';
   
@@ -59,6 +60,10 @@ const CreateEvent = () => {
             <input className="m-4" onChange={(e)=> handle(e)} id = "name" value = {data.name} placeholder="name"  type='text'></input>
             <label  className="m-1" htmlFor="loc">Location </label>
             <select id="loc" name="loc"  onChange={(e)=> handle(e)}>
+            <option selected disabled = "true">-- Select Location --</option>
+            {/* {
+              Country.Country.map(result)=>(<option title="">result.name</option>)
+            } */}
             <option value="Bangladesh">Bangladesh</option>
             <option value="India">India</option>
             <option value="Pakistan">Pakistan</option>
