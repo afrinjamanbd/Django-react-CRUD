@@ -6,48 +6,47 @@ import { useNavigate } from "react-router-dom";
 
 function PaginatedEvent() {
 
-  let limit = 5;
+  let totalData = 0;
+  
+  const [limit, setLimit] = useState(5);
 
-  let total = 20;
+  const [currentPage, setcurrentPage] = useState(0);
+
+  const [total, setTotal] = useState(0);
 
   const navigate = useNavigate();
 
   const [items, setItems] = useState([]);
 
   const [pageCount, setpageCount] = useState(0);
-  
-  // get total value of all events
-  function getTotal() {
-   return fetch(`http://localhost:8000/api/events`)
+
+  // fetches data for first page and sets pagination total pages
+  useEffect(() => {
+    fetch(`http://localhost:8000/api/events`)
    .then((response) => response.json())
    .then((responseJson) => {
-    total = responseJson.length;
-     return total;
+    totalData = Number(responseJson.length)
+    setTotal(Number(responseJson.length))
    })
    .catch((error) => {
      console.error(error);
    });
-  }
 
-  getTotal() 
-
-  // fetches data for first page and sets pagination total pages
-  useEffect(() => {
     const getEvents = async () => {
       const res = await fetch(
         `http://localhost:8000/api/events?page[number]=1&page[size]=${limit}`
       );
-      const data = await res.json();    
-      setpageCount(Math.ceil(total/ limit));
+      const data = await res.json();   
+      setpageCount(Math.ceil(totalData / limit));
       setItems(data);
     };
     getEvents();
   }, [limit]);
 
   // fetches event data for current pages
-  const fetchEvents = async (currentPage) => {
+  const fetchEvents = async (Page) => {
       const res = await fetch(
-        `http://localhost:8000/api/events?page[number]=${currentPage}&page[size]=${limit}`
+        `http://localhost:8000/api/events?page[number]=${Page}&page[size]=${limit}`
       );
       const data = await res.json();
       return data;
@@ -81,8 +80,9 @@ function PaginatedEvent() {
 
   // page number onclick funtion
   const handlePageClick = async (data) => {
-    let currentPage = data.selected + 1;
-    const eventsFormServer = await fetchEvents(currentPage);
+    const s = data.selected + 1
+    setcurrentPage(data.selected + 1)
+    const eventsFormServer = await fetchEvents(s);
     setItems(eventsFormServer);
   };
 
@@ -94,7 +94,7 @@ function PaginatedEvent() {
       </p>
       <div style={{display:"inline-block"}}>
         <h6 style={{display:"inline-block"}} >Show</h6>             
-        <select  id="size" name="size" className=" m-2" >
+        <select  id="size" name="size" className=" m-2" onChange={(e)=> setLimit(e.target.value)}>
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="15">15</option>
@@ -130,7 +130,7 @@ function PaginatedEvent() {
         </table>
         </div>
       </div>
-      <div style={{display:"inline-block"}}>Showing {1} to {limit} of {total} results</div>
+      {/* <div style={{display:"inline-block"}}>Showing {currentPage * limit +1 } to {currentPage *limit +limit} of {total} results</div> */}
       <ReactPaginate
         previousLabel={"previous"}
         nextLabel={"next"}
